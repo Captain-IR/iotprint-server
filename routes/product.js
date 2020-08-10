@@ -13,15 +13,15 @@ router.get('/products', isAuth, productController.getProducts)
 router.get('/products/public', productController.getPublicProducts)
 
 // GET /api/product/:productId
-router.get('/product/:productId', isAuth, productController.getProduct)
+router.get('/product/:productId', productController.getProduct)
 
 // POST /api/product/create
 router.post(
 	'/product/create',
 	isAuth,
 	[
-		body('title').trim().isLength({ min: 3 }),
-		body('description').trim().isLength({ min: 5 }),
+		body('title').trim().isLength({ min: 1 }),
+		body('description').trim(),
 	],
 	productController.createProduct
 )
@@ -31,8 +31,8 @@ router.put(
 	'/product/:productId',
 	isAuth,
 	[
-		body('title').trim().isLength({ min: 3 }),
-		body('description').trim().isLength({ min: 5 }),
+		body('title').trim().isLength({ min: 1 }),
+		body('description').trim(),
 	],
 	productController.updateProduct
 )

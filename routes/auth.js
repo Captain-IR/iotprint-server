@@ -24,9 +24,14 @@ router.post(
 				})
 			})
 			.normalizeEmail(),
-
-		body('password').trim().isLength({ min: 5 }),
 		body('username').trim().notEmpty(),
+		body('password').trim().isLength({ min: 5 }),
+		body('confirmPassword').custom((value, { req }) => {
+			if (value !== req.body.password) {
+				throw new Error('Passwords don\'t match!');
+			}
+			return true;
+		})
 	],
 	authController.signup
 )

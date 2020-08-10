@@ -8,7 +8,7 @@ const Product = require('../models/product')
 exports.getFile = async (req, res, next) => {
 	const productId = req.params.productId
 	try {
-		const product = await Product.findOne({ _id: productId })
+		const product = await Product.findById(productId)
 
 		// Resource not found
 		if (!product) errorHandler('Product Not Found', 404)

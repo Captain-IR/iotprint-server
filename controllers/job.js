@@ -10,7 +10,6 @@ exports.getJobs = async (req, res, next) => {
 		const totalItems = await Job.find({ 'user.userId': req.userId }).countDocuments()
 		const jobs = await Job.find({ 'user.userId': req.userId })
 			.populate('product')
-			.sort({ createdAt: -1 })
 			.skip((currentPage - 1) * perPage)
 			.limit(perPage)
 		// Resource not found
@@ -26,9 +25,8 @@ exports.getJobs = async (req, res, next) => {
 }
 
 exports.getJob = async (req, res, next) => {
-	const jobId = req.params.jobId
 	try {
-		const job = await Job.findById(jobId)
+		const job = await Job.findOne({ status: 'standby' })
 		// Resource not found
 		if (!job) errorHandler('Job Not Found', 404)
 

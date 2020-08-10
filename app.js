@@ -62,7 +62,7 @@ app.use((req, res, next) => {
 app.use('/auth', authRoutes)
 app.use('/api', productRoutes)
 app.use('/api', jobRoutes)
-app.use('/download', fileRoutes)
+app.use('/api', fileRoutes)
 
 app.use((error, req, res, next) => {
 	console.log(error)

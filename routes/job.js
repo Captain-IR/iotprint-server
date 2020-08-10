@@ -13,7 +13,7 @@ router.post('/job/create', isAuth, jobController.createJob)
 router.get('/jobs', isAuth, jobController.getJobs)
 
 // // GET /api/job
-router.get('/job/:jobId', jobController.getJob)
+router.get('/job', jobController.getJob)
 
 // // PUT /api/job/:jobId
 router.put('/job/:jobId', jobController.updateJob)

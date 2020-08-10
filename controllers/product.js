@@ -60,11 +60,6 @@ exports.getProduct = async (req, res, next) => {
 			erroHandler('Product not found!', 404)
 		}
 
-		// Authorization Mechanism
-		if (product.creator._id.toString() !== req.userId.toString()) {
-			erroHandler('UnAuthorized!', 403)
-		}
-
 		res.status(200).json({
 			message: 'Product Fetched',
 			product,

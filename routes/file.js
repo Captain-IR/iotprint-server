@@ -4,6 +4,6 @@ const fileController = require('../controllers/file')
 
 const router = express.Router()
 
-router.get('/file/:productId', fileController.getFile)
+router.get('/download/:productId', fileController.getFile)
 
 module.exports = router
