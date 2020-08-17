@@ -38,7 +38,8 @@ const fileFilter = (req, file, cb) => {
 		file.mimetype === 'image/png' ||
 		file.mimetype === 'image/jpg' ||
 		file.mimetype === 'image/jpeg' ||
-		file.mimetype === 'model/stl'
+		file.mimetype === 'model/stl' ||
+		file.mimetype === 'application/octet-stream'
 	) {
 		cb(null, true)
 	} else {
