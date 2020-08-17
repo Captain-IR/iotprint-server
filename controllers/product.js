@@ -13,13 +13,12 @@ const clearImage = filePath => {
 	fs.unlink(filePath, err => console.log(err))
 }
 
-const clearGcode = filePath => {
+const clearStl = filePath => {
 	filePath = path.join(__dirname, '..', filePath)
 	fs.unlink(filePath, err => console.log(err))
 }
 
 exports.getProducts = async (req, res, next) => {
-	const public = req.query.public
 	const currentPage = req.query.page || 1
 	const perPage = 6
 	try {
@@ -81,19 +80,19 @@ exports.createProduct = async (req, res, next) => {
 
 		if (!req.files.image) {
 			erroHandler('No Image Provided!', 422)
-		} else if (!req.files.gcode) {
-			erroHandler('No Gcode File Provided!', 422)
+		} else if (!req.files.stl) {
+			erroHandler('No STL File Provided!', 422)
 		}
 
 		const title = req.body.title
 		const description = req.body.description
 		const imageUrl = req.files.image[0].path.replace('\\', '/')
-		const gcodeUrl = req.files.gcode[0].path.replace('\\', '/')
+		const stlUrl = req.files.stl[0].path.replace('\\', '/')
 		const product = new Product({
 			title,
 			description,
 			imageUrl,
-			gcodeUrl,
+			stlUrl,
 			creator: req.userId,
 		})
 
@@ -123,10 +122,10 @@ exports.updateProduct = async (req, res, next) => {
 		const title = req.body.title
 		const description = req.body.description
 		let imageUrl = req.body.image
-		let gcodeUrl = req.body.gcode
+		let stlUrl = req.body.stl
 
 		if (req.files.image) imageUrl = req.files.image[0].path
-		if (req.files.gcode) gcodeUrl = req.files.gcode[0].path
+		if (req.files.stl) stlUrl = req.files.stl[0].path
 
 		const product = await Product.findById(productId).populate('creator')
 
@@ -140,13 +139,13 @@ exports.updateProduct = async (req, res, next) => {
 
 		// Delete the old image file
 		if (imageUrl && imageUrl !== product.imageUrl) clearImage(product.imageUrl)
-		// Delete the old gcode file
-		if (gcodeUrl && gcodeUrl !== product.gcodeUrl) clearGcode(product.gcodeUrl)
+		// Delete the old stl file
+		if (stlUrl && stlUrl !== product.stlUrl) clearStl(product.stlUrl)
 
 		product.title = title
 		product.description = description
 		if (imageUrl) product.imageUrl = imageUrl
-		if (gcodeUrl) product.gcodeUrl = gcodeUrl
+		if (stlUrl) product.stlUrl = stlUrl
 		const result = await product.save()
 
 		res.status(200).json({ message: 'Product updated!', product: result })
@@ -168,9 +167,9 @@ exports.deleteProduct = async (req, res, next) => {
 		if (product.creator.toString() !== req.userId.toString())
 			erroHandler('UnAuthorized', 403)
 
-		// Delete the image and gcode file
+		// Delete the image and stl file
 		clearImage(product.imageUrl)
-		clearGcode(product.gcodeUrl)
+		// clearStl(product.stlUrl)
 
 		// Delete the Product
 		await Product.findByIdAndRemove(productId)

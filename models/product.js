@@ -14,7 +14,7 @@ const productSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		gcodeUrl: {
+		stlUrl: {
 			type: String,
 			required: true,
 		},

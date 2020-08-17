@@ -1,16 +1,18 @@
+require('dotenv').config()
 const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const multer = require('multer')
 const crypto = require('crypto')
+const helmet = require('helmet')
 
 const authRoutes = require('./routes/auth')
 const productRoutes = require('./routes/product')
 const jobRoutes = require('./routes/job')
-const fileRoutes = require('./routes/file')
+const desktopRoutes = require('./routes/desktop')
 
-const { MONGODB_URI } = require('./config')
+const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@iotprint-cluster.tav0i.azure.mongodb.net/${process.env.DEFAULT_DATABASE}?retryWrites=true&w=majority`
 
 const app = express()
 
@@ -25,17 +27,18 @@ const fileStorage = multer.diskStorage({
 	filename: (req, file, cb) => {
 		cb(
 			null,
-			`${crypto.randomBytes(12).toString('hex')}.${file.originalname.split('.')[1]}`
+			`${crypto.randomBytes(8).toString('hex')}.${file.originalname.split('.')[1]}`
 		)
 	},
 })
 
 const fileFilter = (req, file, cb) => {
+	console.log(file.mimetype)
 	if (
 		file.mimetype === 'image/png' ||
 		file.mimetype === 'image/jpg' ||
 		file.mimetype === 'image/jpeg' ||
-		file.mimetype === 'application/octet-stream'
+		file.mimetype === 'model/stl'
 	) {
 		cb(null, true)
 	} else {
@@ -47,7 +50,7 @@ app.use(bodyParser.json())
 app.use(
 	multer({ storage: fileStorage, fileFilter }).fields([
 		{ name: 'image', maxCount: 1 },
-		{ name: 'gcode', maxCount: 1 },
+		{ name: 'stl', maxCount: 1 },
 	])
 )
 app.use('/images', express.static(path.join(__dirname, 'images')))
@@ -59,10 +62,12 @@ app.use((req, res, next) => {
 	next()
 })
 
-app.use('/auth', authRoutes)
+app.use(helmet())
+
+app.use('/api/auth', authRoutes)
 app.use('/api', productRoutes)
 app.use('/api', jobRoutes)
-app.use('/api', fileRoutes)
+app.use('/api/download', desktopRoutes)
 
 app.use((error, req, res, next) => {
 	console.log(error)
@@ -81,7 +86,7 @@ mongoose
 		useUnifiedTopology: true,
 	})
 	.then(result => {
-		app.listen(5000)
+		app.listen(process.env.PORT || 5000)
 	})
 	.catch(err => {
 		console.log(err)

@@ -28,7 +28,7 @@ exports.getJob = async (req, res, next) => {
 	try {
 		const job = await Job.findOne({ status: 'standby' })
 		// Resource not found
-		if (!job) errorHandler('Job Not Found', 404)
+		if (!job) errorHandler('No Job Found', 404)
 
 		res.status(200).json({ message: 'Fetched Job', job })
 	} catch (err) {
@@ -66,7 +66,7 @@ exports.updateJob = async (req, res, next) => {
 	try {
 		const job = await Job.findById(jobId)
 		// Resource not found
-		if (!job) errorHandler('Job Not Found', 404)
+		if (!job) errorHandler('No Job Found', 404)
 		job.status = status
 		await job.save()
 
