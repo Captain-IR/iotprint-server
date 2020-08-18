@@ -70,6 +70,9 @@ exports.updateJob = async (req, res, next) => {
 	const status = req.body.status
 	try {
 		const job = await Job.findById(jobId)
+			.populate('product', 'title')
+			.select('status createdAt user.email')
+
 		// Resource not found
 		if (!job) errorHandler('No job found', 404)
 		job.status = status
@@ -88,6 +91,7 @@ exports.deleteJob = async (req, res, next) => {
 	const jobId = req.params.jobId
 	try {
 		const job = await Job.findById(jobId)
+
 		// Resource not found
 		if (!job) errorHandler('Job not found', 404)
 
