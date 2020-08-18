@@ -38,7 +38,7 @@ const fileFilter = (req, file, cb) => {
 		file.mimetype === 'image/png' ||
 		file.mimetype === 'image/jpg' ||
 		file.mimetype === 'image/jpeg' ||
-		file.mimetype === 'model/stl' ||
+		// file.mimetype === 'model/stl' ||
 		file.mimetype === 'application/octet-stream'
 	) {
 		cb(null, true)
@@ -51,7 +51,7 @@ app.use(bodyParser.json())
 app.use(
 	multer({ storage: fileStorage, fileFilter }).fields([
 		{ name: 'image', maxCount: 1 },
-		{ name: 'stl', maxCount: 1 },
+		{ name: 'gcode', maxCount: 1 },
 	])
 )
 app.use('/images', express.static(path.join(__dirname, 'images')))

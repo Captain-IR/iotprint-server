@@ -14,9 +14,9 @@ exports.getFile = async (req, res, next) => {
 		console.log(product)
 		if (!product) errorHandler('Product Not Found', 404)
 
-		const readerStream = fs.createReadStream(path.join(__dirname, '..', product.stlUrl))
+		const readerStream = fs.createReadStream(path.join(__dirname, '..', product.gcodeUrl))
 		res.set('Content-Type', 'application/octet-stream')
-		res.set('Content-Disposition', `attachment; filename="${product.title}.stl"`)
+		res.set('Content-Disposition', `attachment; filename="${product.title}.gcode"`)
 
 		readerStream.pipe(res)
 	} catch (err) {
