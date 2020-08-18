@@ -24,7 +24,8 @@ exports.getProducts = async (req, res, next) => {
 	try {
 		const totalItems = await Product.find({ creator: req.userId }).countDocuments()
 		const products = await Product.find({ creator: req.userId })
-			.populate('creator')
+			// .populate('creator')
+			.select('title description imageUrl')
 			.sort({ createdAt: -1 })
 			.skip((currentPage - 1) * perPage)
 			.limit(perPage)
@@ -43,7 +44,9 @@ exports.getProducts = async (req, res, next) => {
 }
 
 exports.getPublicProducts = async (req, res, next) => {
-	const products = await Product.find({ public: true }).select('-creator')
+	const products = await Product.find({ public: true }).select(
+		'title description imageUrl'
+	)
 
 	res.status(200).json({
 		message: 'Fetched Products Successfully',
@@ -54,13 +57,14 @@ exports.getPublicProducts = async (req, res, next) => {
 exports.getProduct = async (req, res, next) => {
 	const productId = req.params.productId
 	try {
-		const product = await Product.findById(productId).populate('creator')
+		const product = await Product.findById(productId)
+		
 		if (!product) {
 			erroHandler('Product not found!', 404)
 		}
 
 		res.status(200).json({
-			message: 'Product Fetched',
+			message: 'Product Found',
 			product,
 		})
 	} catch (err) {
@@ -102,7 +106,7 @@ exports.createProduct = async (req, res, next) => {
 		await user.save()
 
 		res.status(201).json({
-			message: 'Product Created Successfully',
+			message: 'Product Created',
 			product,
 		})
 	} catch (err) {
@@ -127,7 +131,7 @@ exports.updateProduct = async (req, res, next) => {
 		if (req.files.image) imageUrl = req.files.image[0].path
 		if (req.files.stl) stlUrl = req.files.stl[0].path
 
-		const product = await Product.findById(productId).populate('creator')
+		const product = await Product.findById(productId)
 
 		// Requesting an Empty Resource
 		if (!product) erroHandler('Product Not Found!', 404)
@@ -148,7 +152,7 @@ exports.updateProduct = async (req, res, next) => {
 		if (stlUrl) product.stlUrl = stlUrl
 		const result = await product.save()
 
-		res.status(200).json({ message: 'Product updated!', product: result })
+		res.status(200).json({ message: 'Product updated', product: result })
 	} catch (err) {
 		if (!err.statusCode) {
 			err.statusCode = 500
@@ -165,7 +169,7 @@ exports.deleteProduct = async (req, res, next) => {
 
 		// Authorization Mechanism
 		if (product.creator.toString() !== req.userId.toString())
-			erroHandler('UnAuthorized', 403)
+			erroHandler('UnAuthorized!', 403)
 
 		// Delete the image and stl file
 		clearImage(product.imageUrl)
@@ -179,7 +183,7 @@ exports.deleteProduct = async (req, res, next) => {
 		user.products.pull(productId)
 		await user.save()
 
-		res.status(200).json({ message: 'Product Deleted Successfully' })
+		res.status(200).json({ message: 'Product Deleted' })
 	} catch (err) {
 		if (!err.statusCode) {
 			err.statusCode = 500

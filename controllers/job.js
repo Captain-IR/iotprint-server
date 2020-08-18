@@ -9,13 +9,15 @@ exports.getJobs = async (req, res, next) => {
 	try {
 		const totalItems = await Job.find({ 'user.userId': req.userId }).countDocuments()
 		const jobs = await Job.find({ 'user.userId': req.userId })
-			.populate('product')
+			.populate('product', 'title')
+			.select('createdAt status')
 			.skip((currentPage - 1) * perPage)
 			.limit(perPage)
+
 		// Resource not found
 		if (!jobs) errorHandler('No Jobs Found', 404)
 
-		res.status(200).json({ message: 'Jobs Fetched', jobs, totalItems })
+		res.status(200).json({ message: 'Jobs fetched', jobs, totalItems })
 	} catch (err) {
 		if (!err.statusCode) {
 			err.statusCode = 500
@@ -27,10 +29,13 @@ exports.getJobs = async (req, res, next) => {
 exports.getJob = async (req, res, next) => {
 	try {
 		const job = await Job.findOne({ status: 'standby' })
-		// Resource not found
-		if (!job) errorHandler('No Job Found', 404)
+			.populate('product', 'title')
+			.select('status createdAt user.email')
 
-		res.status(200).json({ message: 'Fetched Job', job })
+		// Resource not found
+		if (!job) errorHandler('No job found', 404)
+
+		res.status(200).json({ message: 'Fetched job', job })
 	} catch (err) {
 		if (!err.statusCode) {
 			err.statusCode = 500
@@ -51,7 +56,7 @@ exports.createJob = async (req, res, next) => {
 		})
 		await job.save()
 
-		res.status(201).json({ message: 'Job Created Successfully', job })
+		res.status(201).json({ message: 'Job created', job })
 	} catch (err) {
 		if (!err.statusCode) {
 			err.statusCode = 500
@@ -66,11 +71,11 @@ exports.updateJob = async (req, res, next) => {
 	try {
 		const job = await Job.findById(jobId)
 		// Resource not found
-		if (!job) errorHandler('No Job Found', 404)
+		if (!job) errorHandler('No job found', 404)
 		job.status = status
 		await job.save()
 
-		res.status(200).json({ message: 'Job Updated', job })
+		res.status(200).json({ message: 'Job updated', job })
 	} catch (err) {
 		if (!err.statusCode) {
 			err.statusCode = 500
@@ -84,19 +89,19 @@ exports.deleteJob = async (req, res, next) => {
 	try {
 		const job = await Job.findById(jobId)
 		// Resource not found
-		if (!job) errorHandler('Job Not Found', 404)
+		if (!job) errorHandler('Job not found', 404)
 
 		// Authorization Mechanism By User id
 		if (job.user.userId.toString() !== req.userId.toString())
-			errorHandler('UnAuthorized', 403)
+			errorHandler('UnAuthorized!', 403)
 
 		// Check if Status is equal to 'standby'
-		if (job.status !== 'standby') errorHandler('Cant Cancel Job At this Moment', 400)
+		if (job.status !== 'standby') errorHandler('Cant cancel job at this moment!', 400)
 
 		job.status = 'canceled'
 		await job.save()
 
-		res.status(200).json({ message: 'Job Canceled' })
+		res.status(200).json({ message: 'Job canceled' })
 	} catch (err) {
 		if (!err.statusCode) {
 			err.statusCode = 500

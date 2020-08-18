@@ -26,7 +26,7 @@ exports.signup = async (req, res, next) => {
 		})
 		const result = await user.save()
 
-		res.status(201).json({ message: 'User created!', userId: result._id })
+		res.status(201).json({ message: 'Account Created Successfully' })
 	} catch (err) {
 		if (!err.statusCode) {
 			err.statusCode = 500
@@ -41,17 +41,17 @@ exports.login = async (req, res, next) => {
 	try {
 		const user = await User.findOne({ email: email })
 		if (!user) {
-			errorHandler('Invalid Email or Password!.', 400)
+			errorHandler('Invalid Email or Password!', 400)
 		}
 
 		const isEqual = await bcrypt.compare(password, user.password)
 		if (!isEqual) {
-			errorHandler('Invalid Email or Password!.', 400)
+			errorHandler('Invalid Email or Password!', 400)
 		}
 
 		const token = jwt.sign({ userId: user._id.toString() }, 'secret', { expiresIn: '6h' })
 
-		res.status(200).json({ token })
+		res.status(200).json({ message: 'Login Successful', token })
 	} catch (err) {
 		if (!err.statusCode) {
 			err.statusCode = 500
@@ -62,7 +62,7 @@ exports.login = async (req, res, next) => {
 
 exports.me = async (req, res, next) => {
 	try {
-		const user = await User.findById(req.userId).select('-password -products')
+		const user = await User.findById(req.userId).select('email')
 		if (!user) {
 			errorHandler('User not found', 404)
 		}
