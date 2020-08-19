@@ -81,12 +81,9 @@ exports.updateJob = async (req, res, next) => {
 		job.status = status
 		await job.save()
 
-		// console.log('User Email: ', job.user.email)
-		// console.log('Product Title: ', job.product.title)
-
 		if (status === 'finished') {
 			const emailConstruct = {
-				from: 'iotprint@criptext.com',
+				from: process.env.EMAIL_SENDER,
 				to: job.user.email,
 				subject: 'Product ready!',
 				html: `<h1>Your Product "${job.product.title}" is hot and ready, we will deliver it to you soon</h1>`,

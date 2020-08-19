@@ -29,7 +29,7 @@ exports.signup = async (req, res, next) => {
 		await user.save()
 
 		const emailConstruct = {
-			from: 'iotprint@criptext.com',
+			from: process.env.EMAIL_SENDER,
 			to: email,
 			subject: 'SignUp Successful',
 			html:
