@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken')
 
 const errorHandler = require('../util/error-handler')
 
+const transporter = require('../util/emailService')
+
 const User = require('../models/user')
 const Blacklist = require('../models/blacklist')
 
@@ -20,13 +22,25 @@ exports.signup = async (req, res, next) => {
 
 		const hashedPw = await bcrypt.hash(password, 12)
 		const user = new User({
-			email: email,
+			email,
 			password: hashedPw,
 			username,
 		})
-		const result = await user.save()
+		await user.save()
 
-		res.status(201).json({ message: 'Account Created Successfully' })
+		const emailConstruct = {
+			from: 'iotprint@criptext.com',
+			to: email,
+			subject: 'SignUp Successful',
+			html:
+				'<h1>Welcome to IoTprint please login to start using our service and print your models remotely</h1>',
+		}
+		transporter.sendMail(emailConstruct, function (err, res) {
+			if (err) console.log(err)
+			console.log(res)
+		})
+
+		res.status(201).json({ message: 'Account Created, Please now login' })
 	} catch (err) {
 		if (!err.statusCode) {
 			err.statusCode = 500

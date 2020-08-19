@@ -1,5 +1,7 @@
 const errorHandler = require('../util/error-handler')
 
+const transporter = require('../util/emailService')
+
 const User = require('../models/user')
 const Job = require('../models/job')
 
@@ -75,8 +77,25 @@ exports.updateJob = async (req, res, next) => {
 
 		// Resource not found
 		if (!job) errorHandler('No job found', 404)
+
 		job.status = status
 		await job.save()
+
+		// console.log('User Email: ', job.user.email)
+		// console.log('Product Title: ', job.product.title)
+
+		if (status === 'finished') {
+			const emailConstruct = {
+				from: 'iotprint@criptext.com',
+				to: job.user.email,
+				subject: 'Product ready!',
+				html: `<h1>Your Product "${job.product.title}" is hot and ready, we will deliver it to you soon</h1>`,
+			}
+			transporter.sendMail(emailConstruct, function (err, res) {
+				if (err) console.log(err)
+				console.log(res)
+			})
+		}
 
 		res.status(200).json({ message: 'Job updated', job })
 	} catch (err) {
