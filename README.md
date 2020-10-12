@@ -1,4 +1,4 @@
-# Welcome to iotprint-server 👋
+# iotprint-server
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000)
 ![Prerequisite](https://img.shields.io/badge/node-14.4.0-blue.svg)
@@ -40,4 +40,4 @@ npm run dev
 
 Copyright © 2020 [Captain IR](https://github.com/captain-ir).
 
-This project is [MIT]() licensed.
+This project is [MIT](https://github.com/IoTprint/iotprint-server/blob/master/LICENSE) licensed.
