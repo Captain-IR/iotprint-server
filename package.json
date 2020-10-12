@@ -1,19 +1,18 @@
 {
 	"name": "iotprint-server",
 	"version": "1.0.0",
-	"description": "This is the back-end API server for the IoTprint Project",
+	"description": "This is the back-end API server for IoTprint project",
+	"author": "Captain IR",
+	"license": "MIT",
 	"main": "index.js",
 	"engines": {
 		"node": "14.4.0"
 	},
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "node app.js",
-		"start:dev": "nodemon app.js"
+		"dev": "nodemon app.js"
 	},
 	"keywords": [],
-	"author": "Captain IR",
-	"license": "ISC",
 	"dependencies": {
 		"bcrypt": "^5.0.0",
 		"bcryptjs": "^2.4.3",

@@ -1,11 +1,14 @@
-<h1 align="center">Welcome to iotprint-server 👋</h1>
-<p>
-  <a href="#" target="_blank">
-    <img alt="License: ISC" src="https://img.shields.io/badge/License-ISC-yellow.svg" />
-  </a>
-</p>
+# Welcome to iotprint-server 👋
 
-> This is the back-end API server for the IoTprint project
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000)
+![Prerequisite](https://img.shields.io/badge/node-14.4.0-blue.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://mit-license.org/)
+
+> This is the back-end API server for IoTprint project
+
+## Prerequisites
+
+- node 14.4.0
 
 ## Install
 
@@ -19,20 +22,22 @@ npm install
 npm start
 ```
 
-## Run tests
+## Development
 
 ```sh
-npm run test
+npm run dev
 ```
 
 ## Author
 
 👤 **Captain IR**
 
+- Website: https://captainir.com
+- Github: [@captain-ir](https://github.com/captain-ir)
+- LinkedIn: [@captain-ir](https://linkedin.com/in/captain-ir)
 
-## Show your support
+## 📝 License
 
-Give a ⭐️ if this project helped you!
+Copyright © 2020 [Captain IR](https://github.com/captain-ir).
 
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+This project is [MIT]() licensed.
