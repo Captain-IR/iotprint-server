@@ -12,7 +12,7 @@ const productRoutes = require('./routes/product')
 const jobRoutes = require('./routes/job')
 const desktopRoutes = require('./routes/desktop')
 
-const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@iotprint-cluster.tav0i.azure.mongodb.net/${process.env.DEFAULT_DATABASE}?retryWrites=true&w=majority`
+const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.fjthg.mongodb.net/${process.env.DEFAULT_DATABASE}?retryWrites=true&w=majority`
 
 const app = express()
 
@@ -88,6 +88,8 @@ mongoose
 	})
 	.then(result => {
 		app.listen(process.env.PORT || 5000)
+		console.log(`[+] Connected to Database`)
+		console.log(`Listening on port ${process.env.PORT || 5000}`)
 	})
 	.catch(err => {
 		console.log(err)
