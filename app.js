@@ -12,7 +12,7 @@ const productRoutes = require('./routes/product')
 const jobRoutes = require('./routes/job')
 const desktopRoutes = require('./routes/desktop')
 
-const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@iotprint-cluster.tzg94.mongodb.net/${process.env.DEFAULT_DATABASE}?retryWrites=true&w=majority`
+const MONGODB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@iotprint-cluster.iknlv.mongodb.net/${process.env.DEFAULT_DATABASE}?retryWrites=true&w=majority`
 
 const app = express()
 
